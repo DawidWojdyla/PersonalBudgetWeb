@@ -1,0 +1,14 @@
+
+.icon-calculator:before { content: '\e800'; } /* '' */
+.icon-chart-line:before { content: '\e802'; } /* '' */
+.icon-credit-card:before { content: '\e803'; } /* '' */
+.icon-check:before { content: '\e804'; } /* '' */
+.icon-cancel:before { content: '\e805'; } /* '' */
+.icon-lightbulb:before { content: '\e809'; } /* '' */
+.icon-edit:before { content: '\e80a'; } /* '' */
+.icon-chart:before { content: '\e80e'; } /* '' */
+.icon-check-1:before { content: '\e80f'; } /* '' */
+.icon-wallet:before { content: '\e810'; } /* '' */
+.icon-dollar-1:before { content: '\e816'; } /* '' */
+.icon-chart-pie:before { content: '\f200'; } /* '' */
+.icon-balance-scale:before { content: '\f24e'; } /* '' */

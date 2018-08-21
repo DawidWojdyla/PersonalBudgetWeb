@@ -117,7 +117,7 @@ $expenses = $expensesQuery->fetchAll();
 			?>]);
 
 			var options = {
-			  'backgroundColor': 'transparent', 'width': 340, 'height':150, 'forceIFrame':true, 'chartArea':{width:'100%',height:'100%'}, 'sliceVisibilityThreshold': 0, 'legend': {position: 'labeled'}, 'pieSliceText':'label'
+			  'backgroundColor': 'transparent', 'width': 300, 'height':150, 'forceIFrame':true, 'chartArea':{width:'100%',height:'100%'}, 'sliceVisibilityThreshold': 0, 'legend': {position: 'labeled'}, 'pieSliceText':'label'
 			};
 
 			var chart = new google.visualization.PieChart(document.getElementById('piechart'));

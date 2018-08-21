@@ -302,7 +302,7 @@ body
 	padding: 5px;
 	font-weight: bold;
 	text-align: center;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 	font-size: 30px;
 	background-color: #44ab53;
 	border: 1.5px solid #222;
@@ -326,7 +326,7 @@ body
 	margin-right: auto;
 	text-align: left;
 	/*border-collapse: collapse; */
-	margin-bottom: 10px;
+	margin-bottom: 15px;
 }
 
 #expenseTable td
@@ -458,10 +458,10 @@ body
 .buttons > input
 {
 	width: 100px;
-	margin: 10px;
-	height: 45px;
+	margin: 20px 10px 0px 10px;
+	height: 40px;
 	padding: 6px;
-	font-size: 20px;
+	font-size: 18px;
 	font-weight: bold;
 	text-decoration: none;
 	background-color: #44ab53;
@@ -608,7 +608,7 @@ float: right;
 .balanceTable
 {
 	width: 95%;
-	margin: 10px auto 10px auto;
+	margin: 0px auto 10px auto;
 	/*border-collapse: collapse; */
 	padding: 10px;
 }
@@ -656,14 +656,15 @@ float: right;
 }
 */
 
-.balanceTable tr:last-child 
+.balanceTable tr:last-child > td
 {
-	padding: 20px;
+	padding: 20px 5px 15px 5px;
 	color: #1133bb;
 	font-weight: bold;
 	font-size: 22px;
 	border-top: 2px groove #44ab53;
 }
+
 .depiction
 {
 	color: #ed5543;
@@ -717,6 +718,7 @@ float: right;
 #piechart
 { 
 	pointer-events: none;
+	margin-bottom: 10px;
 }
 
 .edit
@@ -733,4 +735,47 @@ float: right;
 {
 	text-decoration:none;
 	color: inherit;
+}
+
+.editClick:hover
+{
+	cursor: pointer; 
+	background-color: #44bc53;
+	color: #ededed;
+}
+
+.editButtons > input
+{
+	margin: 5px;
+	padding: 2px;
+	font-size: 12px;
+	width: 56px;
+	height: 25px;
+}
+
+.editButtons
+{
+	text-align: left;
+}
+
+.pointer
+{
+	cursor: pointer;
+}
+
+.editLink
+{
+	color: inherit;
+	font-size: 14px;
+}
+
+.noMargin
+{
+	margin:0px;
+}
+.position
+{
+	margin-bottom: 1px;
+	width: 45px;
+	height: 25px;
 }

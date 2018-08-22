@@ -21,17 +21,68 @@ $categoryQuery = $database->query("SELECT id, name, position FROM expenses_categ
 $expenseCategoriesAmount = $categoryQuery ->rowCount();
 $expenseCategories = $categoryQuery ->fetchAll();
 
-
-//zmiana nazwy kategorii
-if(isset($_POST['newName']) && $_POST['newName'] != '')
+//zmiana imienia
+if(isset($_POST['newName']))
 {
-	if($_POST['typeOfCategory'] == 'i')
+		if (strlen($_POST['newName'])<3 || strlen($_POST['newName'])>15)
+		{
+			$_SESSION['changeInfo'] = "Imię musi składać się z 3-15 znaków!";
+		}
+		else
+		{
+			$query = $database -> prepare ("UPDATE users SET username=:name WHERE id={$_SESSION['loggedId']}");
+			$query -> bindValue(':name', $_POST['newName'], PDO::PARAM_STR);
+			$query -> execute();
+			$_SESSION['changeInfo'] = "Pomyślnie zmieniono imię!";
+		}
+}
+
+else if (isset($_POST['newPassword']))
+{
+	$givenPassword = filter_input(INPUT_POST, 'currentPassword');
+	$userQuery = $database -> query("SELECT password FROM users WHERE id={$_SESSION['loggedId']}");
+	$user = $userQuery  -> fetch();
+	
+	if (password_verify($givenPassword, $user['password']))
 	{
-			$database->query("UPDATE  incomes_category_assigned_to_users SET name='{$_POST['newName']}' WHERE user_id={$_SESSION['loggedId']} AND id={$_POST['categoryId']}");
+		if (strlen($_POST['newPassword']) < 8 || strlen($_POST['newPassword']) >20)
+		{
+			$_SESSION['changeInfo'] = "Hasło musi zawierać od 8 do 20 znaków!";
+		}
+		else
+		{
+			if($_POST['newPassword'] == $_POST['newPassword2'])
+			{
+			
+				$newHashPassword = password_hash($_POST['newPassword'], PASSWORD_DEFAULT);
+				
+				$database -> query("UPDATE users SET password='{$newHashPassword}' WHERE id={$_SESSION['loggedId']}");
+				
+				$_SESSION['changeInfo'] = "Pomyślnie zmieniono hasło!";
+			}
+			else
+			{
+				$_SESSION['changeInfo'] = "Podane hasła muszą być identyczne!";
+			}
+		}
 	}
 	else
 	{
-		$database->query("UPDATE  expenses_category_assigned_to_users SET name='{$_POST['newName']}' WHERE user_id={$_SESSION['loggedId']} AND id={$_POST['categoryId']}");
+		$_SESSION['changeInfo'] = "Podałeś błędne bieżące hasło!";
+	}
+		
+}
+
+//zmiana nazwy kategorii
+else if(isset($_POST['newCategoryName']) && $_POST['newCategoryName'] != '')
+{
+	if($_POST['typeOfCategory'] == 'i')
+	{
+			$database->query("UPDATE  incomes_category_assigned_to_users SET name='{$_POST['newCategoryName']}' WHERE user_id={$_SESSION['loggedId']} AND id={$_POST['categoryId']}");
+	}
+	else
+	{
+		$database->query("UPDATE  expenses_category_assigned_to_users SET name='{$_POST['newCategoryName']}' WHERE user_id={$_SESSION['loggedId']} AND id={$_POST['categoryId']}");
 	}
 	$_SESSION['changeInfo'] = "Pomyślnie zmieniono nazwę kategorii!";
 }
@@ -115,7 +166,7 @@ else if (isset($_POST['newExpenseCategory']) && $_POST['newExpenseCategory'] != 
 		$query = $database->query("SELECT position FROM expenses_category_assigned_to_users WHERE user_id={$_SESSION['loggedId']} AND name='Inne'");
 		$otherCategoryData = $query ->fetch();
 		
-		$database->query("INSERT INTO incomes_category_assigned_to_users (id, user_id, name, position) VALUES (NULL, {$_SESSION['loggedId']}, '{$newCategoryName}', {$otherCategoryData['position']})");
+		$database->query("INSERT INTO expenses_category_assigned_to_users (id, user_id, name, position) VALUES (NULL, {$_SESSION['loggedId']}, '{$newCategoryName}', {$otherCategoryData['position']})");
 		
 		$query = $database->query("UPDATE expenses_category_assigned_to_users SET position=position+1 WHERE user_id={$_SESSION['loggedId']} AND name='Inne'");
 		
@@ -185,13 +236,16 @@ else if (isset($_POST['expenseCategories']))
 		<link rel="stylesheet"  href="css/fontello.css" type="text/css"/>
 		
 		<script type="text/javascript">
-			
+		
+			var isDataEditShown = false;
 			var isNameEditShown = false;
 			var isEmailEditShown = false;
 			var isPasswordEditShown = false;
-			var isDataEditShown = false;
-			var areIncomesShown = false;
-			var areExpensesShown = false;
+		
+			var areCategoriesShown = false;
+			var areIncomeCategoriesShown = false;
+			var areExpenseCategoriesShown = false;
+			
 			
 			function showDataEdition()
 			{
@@ -204,6 +258,9 @@ else if (isset($_POST['expenseCategories']))
 				{
 					document.getElementById("dataEdit").innerHTML="";
 					isDataEditShown = false;
+					isNameEditShown = false;
+					isEmailEditShown = false;
+					isPasswordEditShown = false;
 				}	
 			}
 				
@@ -212,7 +269,7 @@ else if (isset($_POST['expenseCategories']))
 			{
 				if(!isNameEditShown)
 				{
-					document.getElementById("nameEdit").innerHTML = '<form method="post"><input class="commentGetting" type="text" placeholder="Podaj nowe imię"/><div class="buttons editButtons"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick="nameEditing();"></form>';
+					document.getElementById("nameEdit").innerHTML = '<form method="post" class="noMargin"><input class="commentGetting" type="text" name="newName" placeholder="Podaj nowe imię"/><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick="nameEditing();"></form>';
 					 isNameEditShown = true;
 				}
 				else
@@ -226,7 +283,7 @@ else if (isset($_POST['expenseCategories']))
 			{
 				if(!isEmailEditShown)
 				{
-					document.getElementById("emailEdit").innerHTML = '<input class="commentGetting" type="text"  placeholder="Podaj nowy e-mail" />';
+					document.getElementById("emailEdit").innerHTML = '<form class="noMargin" method="post"><input class="commentGetting" type="text"  placeholder="Podaj nowy e-mail" /><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick="emailEditing();"></div></form>';
 					 isEmailEditShown = true;
 				}
 				else
@@ -240,7 +297,7 @@ else if (isset($_POST['expenseCategories']))
 			{
 				if(!isPasswordEditShown)
 				{
-					document.getElementById("passwordEdit").innerHTML = '<div class="edit"><input class="amountGetting" style="margin-bottom: 10px;" type="password" placeholder="Bieżące hasło"/></div><div class="edit"><input class="commentGetting" type="password" placeholder="Nowe hasło" /></div><div class="edit"><input class="commentGetting" type="password"placeholder="Powtórz hasło"/></div>';
+					document.getElementById("passwordEdit").innerHTML = '<form class="noMargin" method="post"><div class="edit"><input class="amountGetting" pattern=".{8,20}" required title="Hasło musi zawierać od 8  20 znaków" name="currentPassword" style="margin-bottom: 8px;" type="password" placeholder="Bieżące hasło"/></div><div class="edit"><input class="commentGetting" type="password" pattern=".{8,20}" required title="Hasło musi zawierać od 8  20 znaków" name="newPassword" placeholder="Nowe hasło" /></div><div class="edit"><input class="commentGetting" type="password" pattern=".{8,20}" required title="Hasło musi zawierać od 8  20 znaków" name="newPassword2" placeholder="Powtórz hasło"/></div><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick="passwordEditing();"></div></form>';
 					 isPasswordEditShown = true;
 				}
 				else
@@ -263,7 +320,7 @@ else if (isset($_POST['expenseCategories']))
 			
 			function categoryRename(category)
 			{
-				document.getElementById(category).innerHTML = '<form method="post"><input class="commentGetting" type="text" name="newName" placeholder="Podaj nową nazwę"/><input type="hidden" name="typeOfCategory" value="'+category.substr(0,1)+'"><input type="hidden" name="categoryId" value="'+category.substr(1)+'"><div class="buttons editButtons"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick=\'hideCategoryOptions("'+category+'");\'></form>';
+				document.getElementById(category).innerHTML = '<form method="post"><input class="commentGetting" type="text" name="newCategoryName" placeholder="Podaj nową nazwę"/><input type="hidden" name="typeOfCategory" value="'+category.substr(0,1)+'"><input type="hidden" name="categoryId" value="'+category.substr(1)+'"><div class="buttons editButtons"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick=\'hideCategoryOptions("'+category+'");\'></form>';
 			}
 			
 			function categoryDeleting(category)
@@ -291,6 +348,66 @@ else if (isset($_POST['expenseCategories']))
 				for (var i = 0; i < positions.length; ++i) 
 				{
 					positions[i].style.display= 'none';
+				}
+			}
+			
+			function showIncomeCategories()
+			{
+				
+				if(!areIncomeCategoriesShown)
+				{
+					document.getElementById("incomeCategoryDiv").innerHTML ='<form class="noMargin" method="post"><?PHP
+												foreach ($incomesCategories as $category) 
+												{
+														echo '<input type="number" min="1" max="'.$incomeCategoriesAmount.'" class="incomeCategoryPositions amountGetting position" style="display: none;" name="incomeCategories['.$category['id'].']" value="'.$category['position'].'"/><div class="option pointer" style="display: inline;" onclick=\\\'showCategoryOptions("i'.$category['id'].'");\\\'>'."{$category['name']}</div>";
+														echo '<div id="i'.$category['id'].'"></div>';
+												}
+									?><div class="option pointer" style="font-size: 14px; margin-top:4px;  color: #ed5543;" onclick="showChangePositions(\'incomeCategoryPositions\');">&uarr;&darr;zamień kolejność</div><div class="incomeCategoryPositions position" style="display: none;" ><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zamień"><input id="cancel" class="noMargin" value="Anuluj" type="button" onclick="hideChangePositions(\'incomeCategoryPositions\');"></div></div></form><div class="option pointer" style="font-size: 14px; color: #ed5543;" onclick="addNewCategory(\'newIncomeCategory\');">+ nową kategorię</div><div id="newIncomeCategory"></div>';
+					areIncomeCategoriesShown = true;
+				}
+				else
+				{
+					document.getElementById("incomeCategoryDiv").innerHTML ="";
+					areIncomeCategoriesShown = false;
+				}
+				
+			}
+			
+			function showExpenseCategories()
+			{
+				
+				if(!areExpenseCategoriesShown)
+				{
+					document.getElementById("expenseCategoryDiv").innerHTML ='<form class="noMargin" method="post"><?PHP
+												foreach ($expenseCategories as $category) 
+												{
+														echo '<input type="number" min="1" max="'.($expenseCategoriesAmount).'" class="expenseCategoryPositions amountGetting position" style="display: none;" name="expenseCategories['.$category['id'].']" value="'.$category['position'].'"/><div class="option pointer" style="display: inline;" onclick=\\\'showCategoryOptions("e'.$category['id'].'");\\\'>'."{$category['name']}</div>";
+														echo '<div id="e'.$category['id'].'"></div>';
+												}
+									?><div class="option pointer" style="font-size: 14px;  margin-top:4px; color: #ed5543;" onclick="showChangePositions(\'expenseCategoryPositions\');">&uarr;&darr;zamień kolejność</div><div class="expenseCategoryPositions position" style="display: none;"><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zamień"><input id="cancel" class="noMargin" value="Anuluj" type="button" onclick="hideChangePositions(\'expenseCategoryPositions\');"></div></div></form><div class="option pointer" style="font-size: 14px; color: #ed5543;" onclick="addNewCategory(\'newExpenseCategory\');">+ nową kategorię</div><div id="newExpenseCategory"></div><div class="option"></div><div class="edit"><div id="emailEdit"></div></div>';
+					areExpenseCategoriesShown = true;
+				}
+				else
+				{
+					document.getElementById("expenseCategoryDiv").innerHTML ="";
+					areExpenseCategoriesShown = false;
+				}
+				
+			}
+			
+			function showCategories()
+			{
+				if(!areCategoriesShown)
+				{
+					document.getElementById("categoryEdit").innerHTML ='<table id="expenseTable"><tr><td><div class="attributes editClick" onclick="showIncomeCategories();">przychody</div></td><td><div id="incomeCategoryDiv"></div></td></tr><tr><td><div class="attributes editClick" onclick="showExpenseCategories();">wydatki</div></td><td><div id="expenseCategoryDiv"></div></td></tr></table>';
+					areCategoriesShown = true;
+				}
+				else
+				{
+					document.getElementById("categoryEdit").innerHTML ='';
+					areCategoriesShown = false;
+					areIncomeCategoriesShown = false;
+					areExpenseCategoriesShown = false;
 				}
 			}
 				
@@ -341,40 +458,15 @@ else if (isset($_POST['expenseCategories']))
 									Edycja danych
 								</div>
 								<div id="dataEdit"></div>
-								<div id="tableHead" class="editClick" onclick="showIncomesCategories();">
+								<div id="tableHead" class="editClick" onclick="showCategories();">
 									Edycja kategorii
 								</div>
-								<table id="expenseTable"><tr><td><div class="attributes editClick" onclick=';'>przychody</div></td><td><form class="noMargin" method="post"><?PHP
-												foreach ($incomesCategories as $category) 
-												{
-														echo '<input type="number" min="1" max="'.$incomeCategoriesAmount.'" class="incomeCategoryPositions amountGetting position" style="display: none;" name="incomeCategories['.$category['id'].']" value="'.$category['position'].'"/><div class="option pointer" style="display: inline;" onclick=\'showCategoryOptions("i'.$category['id'].'");\'>'."{$category['name']}</div>";
-														echo '<div id="i'.$category['id'].'"></div>';
-												}
-									?>
-									<div class="option pointer" style="font-size: 14px; margin-top:4px;  color: #ed5543;" onclick="showChangePositions('incomeCategoryPositions');">&uarr;&darr;zamień kolejność</div>
-									<div class="incomeCategoryPositions position" style="display: none;" ><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zamień"><input id="cancel" class="noMargin" value="Anuluj" type="button" onclick="hideChangePositions('incomeCategoryPositions');"></div></div>
-									</form>
-									<div class="option pointer" style="font-size: 14px; color: #ed5543;" onclick="addNewCategory('newIncomeCategory');">+ nową kategorię</div>
-									<div id="newIncomeCategory"></div>
-									</td></tr>
-									<tr><td><div class="attributes editClick" onclick="ShowExpensesCategories();">wydatki</div></td><td><form class="noMargin" method="post"><?PHP
-												foreach ($expenseCategories as $category) 
-												{
-														echo '<input type="number" min="1" max="'.($expenseCategoriesAmount).'" class="expenseCategoryPositions amountGetting position" style="display: none;" name="expenseCategories['.$category['id'].']" value="'.$category['position'].'"/><div class="option pointer" style="display: inline;" onclick=\'showCategoryOptions("e'.$category['id'].'");\'>'."{$category['name']}</div>";
-														echo '<div id="e'.$category['id'].'"></div>';
-												}
-									?>
-									<div class="option pointer" style="font-size: 14px;  margin-top:4px; color: #ed5543;" onclick="showChangePositions('expenseCategoryPositions');">&uarr;&darr;zamień kolejność</div>
-									<div class="expenseCategoryPositions position" style="display: none;"><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zamień"><input id="cancel" class="noMargin" value="Anuluj" type="button" onclick="hideChangePositions('expenseCategoryPositions');"></div></div>
-									</form>
-									<div class="option pointer" style="font-size: 14px; color: #ed5543;" onclick="addNewCategory('newExpenseCategory');">+ nową kategorię</div>
-									<div id="newExpenseCategory"></div>
-									
-									<div class="option"></div><div class="edit"><div id="emailEdit"></div></div></td></tr></table>
+								<div id="categoryEdit"></div>
+								
 								<div id="tableHead" class="editClick">
 									Edycja kategorii wydatków
 								</div>
-								<div id="categoryEdit"></div>
+								<div id="categoryEdit2"></div>
 						</div>
 					</main>
 					</div>

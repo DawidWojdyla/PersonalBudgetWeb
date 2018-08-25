@@ -102,7 +102,6 @@ if (isset($_POST['amount']))
 		unset ($_SESSION['commentSes']);
 		
 		$_SESSION['upgrade'] = "Dodano nowy wydatek!";
-		header ("Location: menu.php");
 		
 	}
 }
@@ -164,6 +163,15 @@ if (isset($_POST['amount']))
 				</div>
 				<div class="col-md-8" style="padding:5px;">	
 					<main>
+					<?PHP
+									if(isset($_SESSION['upgrade']))
+									{
+										echo '<div class="option error" style="margin-bottom:10px;">'.$_SESSION['upgrade'].'</div>';
+										//echo '<script>alert("'.$_SESSION['changeInfo'].'");</script>';
+										unset($_SESSION['upgrade']);
+										echo "<script type=\"text/javascript\">window.setTimeout(\"window.location.replace('menu.php');\",1800);</script>"; 
+									}
+					?>
 						<div id="tableContainer">
 							<form method="post">
 								<div id="tableHead">

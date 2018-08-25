@@ -53,13 +53,6 @@
 						</div>
 					</div>
 				</div>
-				<?PHP
-					if (isset($_SESSION['upgrade']))
-					{
-						echo '<div class="info">'.$_SESSION['upgrade'].'</div>';
-						unset ($_SESSION['upgrade']);
-					}
-					?>
 			</header>
 			<div class="row">
 				<div class="col-sm-4" style="padding:5px;">

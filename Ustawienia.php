@@ -21,6 +21,10 @@ $categoryQuery = $database->query("SELECT id, name, position FROM expenses_categ
 $expenseCategoriesAmount = $categoryQuery ->rowCount();
 $expenseCategories = $categoryQuery ->fetchAll();
 
+$lastIncomes = $database->query("SELECT incomes.id, incomes_category_assigned_to_users.name, incomes.amount, incomes.date FROM incomes, incomes_category_assigned_to_users WHERE incomes.user_id={$_SESSION['loggedId']} AND incomes_category_assigned_to_users.id=incomes.income_category_assigned_to_user_id ORDER BY incomes.id DESC LIMIT 5");
+
+$lastExpenses = $database->query("SELECT expenses.id, expenses_category_assigned_to_users.name, expenses.amount, expenses.date FROM expenses, expenses_category_assigned_to_users WHERE expenses.user_id={$_SESSION['loggedId']} AND expenses_category_assigned_to_users.id=expenses.expense_category_assigned_to_user_id ORDER BY expenses.id DESC LIMIT 5");
+
 //zmiana imienia
 if(isset($_POST['newName']))
 {
@@ -35,6 +39,23 @@ if(isset($_POST['newName']))
 			$query -> execute();
 			$_SESSION['changeInfo'] = "Pomyślnie zmieniono imię!";
 		}
+}
+
+else if(isset($_POST['newEmail']))
+{
+	$email = filter_input(INPUT_POST, 'newEmail', FILTER_VALIDATE_EMAIL);
+	
+		if (empty($email))
+		{
+			
+			$_SESSION['changeInfo']= "Podałeś niepoprawny adres e-mail!";
+		}
+		else
+		{
+			$database->query("UPDATE users SET email='{$email}' WHERE id={$_SESSION['loggedId']}");
+			$_SESSION['changeInfo'] = "Pomyślnie zmieniono adres e-mail!";
+		}
+
 }
 
 else if (isset($_POST['newPassword']))
@@ -203,8 +224,23 @@ else if (isset($_POST['expenseCategories']))
 	else
 	{
 		$_SESSION['changeInfo'] = "Każda kategoria musi mieć inną pozycję!";
+	}	
+}
+else if(isset($_POST['lastIncomes']))
+{
+	foreach($_POST['lastIncomes'] as $lastIncome)
+	{
+		$database->query("DELETE FROM incomes WHERE id={$lastIncome}");
 	}
-		
+	$_SESSION['changeInfo'] = "Pomyślnie usunięto wybrane przychody!";
+}
+else if(isset($_POST['lastExpenses']))
+{
+	foreach($_POST['lastExpenses'] as $lastExpense)
+	{
+		$database->query("DELETE FROM expenses WHERE id={$lastExpense}");
+	}
+	$_SESSION['changeInfo'] = "Pomyślnie usunięto wybrane przychody!";
 }
 
 ?>
@@ -246,6 +282,9 @@ else if (isset($_POST['expenseCategories']))
 			var areIncomeCategoriesShown = false;
 			var areExpenseCategoriesShown = false;
 			
+			var areLastAddedIncomesShown = false;
+			var areLastAddedExpensesShown = false;
+			
 			
 			function showDataEdition()
 			{
@@ -283,7 +322,7 @@ else if (isset($_POST['expenseCategories']))
 			{
 				if(!isEmailEditShown)
 				{
-					document.getElementById("emailEdit").innerHTML = '<form class="noMargin" method="post"><input class="commentGetting" type="text"  placeholder="Podaj nowy e-mail" /><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick="emailEditing();"></div></form>';
+					document.getElementById("emailEdit").innerHTML = '<form class="noMargin" method="post"><input class="commentGetting" type="email"  name="newEmail" placeholder="Podaj nowy e-mail" /><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick="emailEditing();"></div></form>';
 					 isEmailEditShown = true;
 				}
 				else
@@ -410,6 +449,34 @@ else if (isset($_POST['expenseCategories']))
 					areExpenseCategoriesShown = false;
 				}
 			}
+			
+			function showLastAddedIncomes()
+			{
+				if(!areLastAddedIncomesShown)
+				{
+				document.getElementById("lastAddedIncomesEdit").style.display="inline";
+				areLastAddedIncomesShown = true;
+				}
+				else
+				{
+					document.getElementById("lastAddedIncomesEdit").style.display="none";
+					areLastAddedIncomesShown = false;
+				}
+			}
+
+			function showLastAddedExpenses()
+			{
+				if(!areLastAddedExpensesShown)
+				{
+					document.getElementById("lastAddedExpensesEdit").style.display="inline";
+					areLastAddedExpensesShown = true;
+				}
+				else
+				{
+					document.getElementById("lastAddedExpensesEdit").style.display="none";
+					areLastAddedExpensesShown = false;
+				}
+			}
 				
 		</script>
 
@@ -449,8 +516,9 @@ else if (isset($_POST['expenseCategories']))
 									if(isset($_SESSION['changeInfo']))
 									{
 										echo '<div class="option error" style="margin-bottom:10px;">'.$_SESSION['changeInfo'].'</div>';
+										//echo '<script>alert("'.$_SESSION['changeInfo'].'");</script>';
 										unset($_SESSION['changeInfo']);
-										echo "<script type=\"text/javascript\">window.setTimeout(\"window.location.replace('ustawienia.php');\",2000);</script>"; 
+										echo "<script type=\"text/javascript\">window.setTimeout(\"window.location.replace('ustawienia.php');\",1800);</script>"; 
 									}
 									?>
 						<div id="tableContainer">
@@ -462,11 +530,42 @@ else if (isset($_POST['expenseCategories']))
 									Edycja kategorii
 								</div>
 								<div id="categoryEdit"></div>
-								
-								<div id="tableHead" class="editClick">
-									Edycja kategorii wydatków
+								<div id="tableHead" class="editClick" onclick="showLastAddedIncomes();">
+									Ostatnie przychody
 								</div>
-								<div id="categoryEdit2"></div>
+								<div id="lastAddedIncomesEdit" style="display: none;">
+								<form class="noMargin" method="post">
+									<div class="lastDataTableContainer">
+										<table class="lastDataEdit option">
+											<?PHP
+											foreach ($lastIncomes as $lastIncome)
+											{
+												echo "<tr><td><label for='li{$lastIncome['id']}'><input class='lastDataCheckbox pointer' id='li{$lastIncome['id']}' type='checkbox' value='li{$lastIncome['id']}' name='lastIncomes[]'></label></td><td><label  class='pointer' for='li{$lastIncome['id']}'>{$lastIncome['date']}</label></td><td><label  class='pointer' for='li{$lastIncome['id']}'>{$lastIncome['name']}</label></td><td align='right'><label class='pointer' for='li{$lastIncome['id']}'>{$lastIncome['amount']}</label></td></tr>";
+											}
+											?>
+										</table>
+										<div class="buttons editButtons" style="text-align: center;"><input type="submit" id="add" value="Usuń" style="margin-right:7%;"><input id="cancel" class="noMargin" value="Anuluj" type="reset" style="margin-left:7%;" /></div>
+									</div>
+								</form>	
+								</div>
+								<div id="tableHead" class="editClick" onclick="showLastAddedExpenses();">
+									Ostatnie wydatki
+								</div>
+								<div id="lastAddedExpensesEdit" style="display: none;">
+								<form class="noMargin" method="post">
+									<div class="lastDataTableContainer">
+										<table class="option lastDataEdit">
+											<?PHP
+											foreach ($lastExpenses as $lastExpense)
+											{
+												echo "<tr><td><label for='le{$lastExpense['id']}'><input class='lastDataCheckbox pointer' type='checkbox' id='le{$lastExpense['id']}' value='{$lastExpense['id']}' name='lastExpenses[]'></label></td><td><label class='pointer' for='le{$lastExpense['id']}'>{$lastExpense['date']}</label></td><td><label class='pointer' for='le{$lastExpense['id']}'>{$lastExpense['name']}</label></td><td align='right'><label class='pointer' for='le{$lastExpense['id']}'>{$lastExpense['amount']}</label></td></tr>";
+											}
+											?>
+										</table>
+										<div class="buttons editButtons" style="text-align: center;"><input type="submit" id="add" value="Usuń" style="margin-right:7%;"><input id="cancel" class="noMargin" value="Anuluj" type="reset" style="margin-left:7%;" /></div>
+									</div>
+								</form>	
+								</div>
 						</div>
 					</main>
 					</div>

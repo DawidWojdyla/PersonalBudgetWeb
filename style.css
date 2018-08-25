@@ -779,3 +779,26 @@ float: right;
 	width: 45px;
 	height: 25px;
 }
+
+.lastDataTableContainer
+{
+	width: 94%;
+	margin: 3%;
+}
+
+.lastDataEdit
+{
+	width:100%;
+    margin-left:auto; 
+    margin-right:auto; 
+}
+
+.lastDataEdit th
+{
+	padding-bottom: 5px;
+}
+
+.lastDataEdit td
+{
+	padding-bottom: 3px;
+}

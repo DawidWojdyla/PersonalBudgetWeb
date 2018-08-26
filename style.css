@@ -802,3 +802,16 @@ float: right;
 {
 	padding-bottom: 3px;
 }
+
+.arrow
+{
+	font-size: 45px;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.arrow:hover
+{
+	font-weight: bold;
+}

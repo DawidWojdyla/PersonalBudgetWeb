@@ -290,12 +290,14 @@ else if(isset($_POST['lastExpenses']))
 			{
 				if(!isDataEditShown)
 				{
-					document.getElementById("dataEdit").innerHTML ='<table id="expenseTable"><tr><td><div class="attributes editClick" onclick="nameEditing();">imię</div></td><td><div class="option"><?PHP echo $userData['username'];?></div><div class="edit"><div id="nameEdit"></div></div></td></tr><tr><td><div class="attributes editClick" onclick="emailEditing();">e-mail</div></td><td><div class="option"><?PHP echo $userData['email']; ?></div><div class="edit"><div id="emailEdit"></div></div></td></tr><tr><td><div class="attributes editClick" onclick="passwordEditing();">hasło</div></td><td><div class="option"><div id="passwordEdit"></div></div></td></tr></table>';
+					document.getElementById("dataEdit").innerHTML ='<table id="expenseTable"><tr><td><div class="attributes editClick" onclick="nameEditing();">imię</div></td><td><div class="option"><?PHP echo $userData['username'];?></div><div class="edit"><div id="nameEdit"></div></div></td></tr><tr><td><div class="attributes editClick" onclick="emailEditing();">e-mail</div></td><td><div class="option"><?PHP echo $userData['email']; ?></div><div class="edit"><div id="emailEdit"></div></div></td></tr><tr><td><div class="attributes editClick" onclick="passwordEditing();">hasło</div></td><td><div class="option"><div id="passwordEdit"></div></div></td></tr></table><div style="margin-bottom: 40px;"></div>';
+					document.getElementById("dataDownArrow").style.display="none";
 					 isDataEditShown = true;
 				}
 				else
 				{
 					document.getElementById("dataEdit").innerHTML="";
+					document.getElementById("dataDownArrow").style.display="inline";
 					isDataEditShown = false;
 					isNameEditShown = false;
 					isEmailEditShown = false;
@@ -308,7 +310,7 @@ else if(isset($_POST['lastExpenses']))
 			{
 				if(!isNameEditShown)
 				{
-					document.getElementById("nameEdit").innerHTML = '<form method="post" class="noMargin"><input class="commentGetting" type="text" name="newName" placeholder="Podaj nowe imię"/><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick="nameEditing();"></form>';
+					document.getElementById("nameEdit").innerHTML = '<form method="post"><input class="commentGetting" type="text" name="newName" placeholder="Podaj nowe imię"/><div class="buttons editButtons" style="margin-top: 5px;"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick="nameEditing();"></form><div style="margin-bottom: -20px;"></div>';
 					 isNameEditShown = true;
 				}
 				else
@@ -322,7 +324,7 @@ else if(isset($_POST['lastExpenses']))
 			{
 				if(!isEmailEditShown)
 				{
-					document.getElementById("emailEdit").innerHTML = '<form class="noMargin" method="post"><input class="commentGetting" type="email"  name="newEmail" placeholder="Podaj nowy e-mail" /><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick="emailEditing();"></div></form>';
+					document.getElementById("emailEdit").innerHTML = '<form method="post"><input class="commentGetting" type="email" name="newEmail" placeholder="Podaj nowy e-mail" /><div class="buttons editButtons" style="margin-top: 5px;"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick="emailEditing();"></div></form><div style="margin-bottom: -20px;"></div>';
 					 isEmailEditShown = true;
 				}
 				else
@@ -336,7 +338,7 @@ else if(isset($_POST['lastExpenses']))
 			{
 				if(!isPasswordEditShown)
 				{
-					document.getElementById("passwordEdit").innerHTML = '<form class="noMargin" method="post"><div class="edit"><input class="amountGetting" pattern=".{8,20}" required title="Hasło musi zawierać od 8  20 znaków" name="currentPassword" style="margin-bottom: 8px;" type="password" placeholder="Bieżące hasło"/></div><div class="edit"><input class="commentGetting" type="password" pattern=".{8,20}" required title="Hasło musi zawierać od 8  20 znaków" name="newPassword" placeholder="Nowe hasło" /></div><div class="edit"><input class="commentGetting" type="password" pattern=".{8,20}" required title="Hasło musi zawierać od 8  20 znaków" name="newPassword2" placeholder="Powtórz hasło"/></div><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick="passwordEditing();"></div></form>';
+					document.getElementById("passwordEdit").innerHTML = '<form class="noMargin" method="post"><div class="edit"><input class="amountGetting" pattern=".{8,20}" required title="Hasło musi zawierać od 8  20 znaków" name="currentPassword" style="margin-bottom: 8px;" type="password" placeholder="Bieżące hasło"/></div><div class="edit"><input class="commentGetting" type="password" pattern=".{8,20}" required title="Hasło musi zawierać od 8  20 znaków" name="newPassword" placeholder="Nowe hasło" /></div><div class="edit"><input class="commentGetting" type="password" pattern=".{8,20}" required title="Hasło musi zawierać od 8  20 znaków" name="newPassword2" placeholder="Powtórz hasło"/></div><div class="buttons editButtons"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick="passwordEditing();"></div></form><div style="margin-bottom: -20px;"></div>';
 					 isPasswordEditShown = true;
 				}
 				else
@@ -348,7 +350,7 @@ else if(isset($_POST['lastExpenses']))
 			
 			function addNewCategory(kindOfCategory)
 			{
-				document.getElementById(kindOfCategory).innerHTML =  '<form method="post"><input class="commentGetting" type="text" name="'+kindOfCategory+'" placeholder="Podaj nazwę"/><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Dodaj"><input id="cancel" value="Anuluj" type="button" onclick=\'hideCategoryOptions("'+kindOfCategory+'");\'></form>';
+				document.getElementById(kindOfCategory).innerHTML =  '<form method="post"><input class="commentGetting" type="text" name="'+kindOfCategory+'" placeholder="Podaj nazwę"/><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Dodaj"><input id="cancel" value="Anuluj" type="button" onclick=\'hideCategoryOptions("'+kindOfCategory+'");\'></form><div style="margin-bottom: -30px;"></div>';
 			}
 			
 			
@@ -359,12 +361,12 @@ else if(isset($_POST['lastExpenses']))
 			
 			function categoryRename(category)
 			{
-				document.getElementById(category).innerHTML = '<form method="post"><input class="commentGetting" type="text" name="newCategoryName" placeholder="Podaj nową nazwę"/><input type="hidden" name="typeOfCategory" value="'+category.substr(0,1)+'"><input type="hidden" name="categoryId" value="'+category.substr(1)+'"><div class="buttons editButtons"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick=\'hideCategoryOptions("'+category+'");\'></form>';
+				document.getElementById(category).innerHTML = '<form method="post"><input class="commentGetting" type="text" name="newCategoryName" placeholder="Podaj nową nazwę"/><input type="hidden" name="typeOfCategory" value="'+category.substr(0,1)+'"><input type="hidden" name="categoryId" value="'+category.substr(1)+'"><div class="buttons editButtons noMargin"><input type="submit" id="add" value="Zapisz"><input id="cancel" value="Anuluj" type="button" onclick=\'hideCategoryOptions("'+category+'");\'></form>';
 			}
 			
 			function categoryDeleting(category)
 			{
-				document.getElementById(category).innerHTML =  '<form method="post" class="noMargin"><input type="hidden" name="typeOfCategory" value="'+category.substr(0,1)+'"><input type="hidden" name="categoryId" value="'+category.substr(1)+'"><span style="font-size:14px; margin: 10px 0 0 0;">Czy na pewno chcesz usunąć kategorię?</span><div class="buttons editButtons noMargin"><input type="submit" class="noMargin" id="add" value="Tak"><input id="cancel" class="noMargin" value="Anuluj" type="button" onclick=\'hideCategoryOptions("'+category+'");\'></form>';
+				document.getElementById(category).innerHTML =  '<form method="post" class="noMargin"><input type="hidden" name="typeOfCategory" value="'+category.substr(0,1)+'"><input type="hidden" name="categoryId" value="'+category.substr(1)+'"><div style="font-size:14px; margin-top: 3px;">Czy na pewno chcesz usunąć kategorię?</div><div class="buttons editButtons noMargin"><input type="submit" class="noMargin" id="add" value="Tak"><input id="cancel" class="noMargin" value="Anuluj" type="button" onclick=\'hideCategoryOptions("'+category+'");\'></form>';
 			}
 			
 			function hideCategoryOptions(category)
@@ -438,12 +440,14 @@ else if(isset($_POST['lastExpenses']))
 			{
 				if(!areCategoriesShown)
 				{
-					document.getElementById("categoryEdit").innerHTML ='<table id="expenseTable"><tr><td><div class="attributes editClick" onclick="showIncomeCategories();">przychody</div></td><td><div id="incomeCategoryDiv"></div></td></tr><tr><td><div class="attributes editClick" onclick="showExpenseCategories();">wydatki</div></td><td><div id="expenseCategoryDiv"></div></td></tr></table>';
+					document.getElementById("categoryEdit").innerHTML ='<table id="expenseTable"><tr><td><div class="attributes editClick" onclick="showIncomeCategories();">przychody</div></td><td><div id="incomeCategoryDiv"></div></td></tr><tr><td><div class="attributes editClick" onclick="showExpenseCategories();">wydatki</div></td><td><div id="expenseCategoryDiv"></div></td></tr></table><div style="margin-bottom: 40px;"></div>';
+					document.getElementById("categoriesDownArrow").style.display="none";
 					areCategoriesShown = true;
 				}
 				else
 				{
 					document.getElementById("categoryEdit").innerHTML ='';
+					document.getElementById("categoriesDownArrow").style.display="inline";
 					areCategoriesShown = false;
 					areIncomeCategoriesShown = false;
 					areExpenseCategoriesShown = false;
@@ -454,12 +458,14 @@ else if(isset($_POST['lastExpenses']))
 			{
 				if(!areLastAddedIncomesShown)
 				{
-				document.getElementById("lastAddedIncomesEdit").style.display="inline";
-				areLastAddedIncomesShown = true;
+					document.getElementById("lastAddedIncomesEdit").style.display="inline";
+					document.getElementById("incomeDownArrow").style.display="none";
+					areLastAddedIncomesShown = true;
 				}
 				else
 				{
 					document.getElementById("lastAddedIncomesEdit").style.display="none";
+					document.getElementById("incomeDownArrow").style.display="inline";
 					areLastAddedIncomesShown = false;
 				}
 			}
@@ -469,11 +475,13 @@ else if(isset($_POST['lastExpenses']))
 				if(!areLastAddedExpensesShown)
 				{
 					document.getElementById("lastAddedExpensesEdit").style.display="inline";
+					document.getElementById("expenseDownArrow").style.display="none";
 					areLastAddedExpensesShown = true;
 				}
 				else
 				{
 					document.getElementById("lastAddedExpensesEdit").style.display="none";
+					document.getElementById("expenseDownArrow").style.display="inline";
 					areLastAddedExpensesShown = false;
 				}
 			}
@@ -526,10 +534,16 @@ else if(isset($_POST['lastExpenses']))
 									Edycja danych
 								</div>
 								<div id="dataEdit"></div>
+								<div class="noMargin" style="text-align: center; margin-top: -20px; margin-bottom: -2px;">
+									<div id='dataDownArrow' class='editButtons arrow pointer' onclick="showDataEdition();">&dArr;</div>
+								</div>
 								<div id="tableHead" class="editClick" onclick="showCategories();">
 									Edycja kategorii
 								</div>
 								<div id="categoryEdit"></div>
+								<div class="noMargin" style="text-align: center; margin-top: -20px; margin-bottom: -2px;">
+									<div id='categoriesDownArrow' class='editButtons arrow pointer' onclick="showCategories();">&dArr;</div>
+								</div>
 								<div id="tableHead" class="editClick" onclick="showLastAddedIncomes();">
 									Ostatnie przychody
 								</div>
@@ -544,11 +558,14 @@ else if(isset($_POST['lastExpenses']))
 											}
 											?>
 										</table>
-										<div class="buttons editButtons" style="text-align: center;"><input type="submit" id="add" value="Usuń" style="margin-right:7%;"><input id="cancel" class="noMargin" value="Anuluj" type="reset" style="margin-left:7%;" /></div>
+										<div class="buttons editButtons" style="text-align: center; margin-bottom: 30px;"><input type="submit" id="add" value="Usuń" style="margin-right:7%;"><input id="cancel" class="noMargin" value="Anuluj" type="button" onclick="showLastAddedIncomes();" style="margin-left:7%;" /></div>
 									</div>
 								</form>	
 								</div>
-								<div id="tableHead" class="editClick" onclick="showLastAddedExpenses();">
+								<div class="noMargin" style="text-align: center; margin-top: -20px; margin-bottom: -2px;">
+									<div id='incomeDownArrow' class='editButtons arrow pointer' onclick="showLastAddedIncomes();">&dArr;</div>
+								</div>
+								<div id="tableHead" class="editClick noMargin" onclick="showLastAddedExpenses();">
 									Ostatnie wydatki
 								</div>
 								<div id="lastAddedExpensesEdit" style="display: none;">
@@ -562,9 +579,12 @@ else if(isset($_POST['lastExpenses']))
 											}
 											?>
 										</table>
-										<div class="buttons editButtons" style="text-align: center;"><input type="submit" id="add" value="Usuń" style="margin-right:7%;"><input id="cancel" class="noMargin" value="Anuluj" type="reset" style="margin-left:7%;" /></div>
+										<div class="buttons editButtons" style="text-align: center; margin-bottom: 25px;"><input type="submit" id="add" value="Usuń" style="margin-right:7%;"><input id="cancel" value="Anuluj" type="button" onclick="showLastAddedExpenses();" style="margin-left:7%;" /></div>
 									</div>
 								</form>	
+								</div>
+								<div class="noMargin" style="text-align: center; margin-top: -20px; margin-bottom: -7px;">
+									<div id='expenseDownArrow' class='editButtons arrow pointer' onclick="showLastAddedExpenses();">&dArr;</div>
 								</div>
 						</div>
 					</main>

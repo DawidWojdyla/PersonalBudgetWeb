@@ -79,8 +79,15 @@
 					$query = $database -> query ("INSERT INTO incomes_category_assigned_to_users (name, position) SELECT name, position FROM incomes_category_default");
 					$query = $database -> query ("INSERT INTO payment_methods_assigned_to_users (name, position) SELECT name, position FROM payment_methods_default");	
 
-					$_SESSION["successfulRegistration"] = true;
-					header('Location: udanaRejestracja.php');
+					if (isset($_SESSION['nameSes'])) unset($_SESSION['nameSes']);
+					if (isset($_SESSION['emailSes'])) unset($_SESSION['EmailSes']);
+					if (isset($_SESSION['passwordSes'])) unset($_SESSION['passwordSes']);
+					
+					if (isset($_SESSION['nameError'])) unset($_SESSION['nameError']);
+					if (isset($_SESSION['emailError'])) unset($_SESSION['emailError']);
+					if (isset($_SESSION['passwordError'])) unset($_SESSION['passwordError']);
+					
+					$_SESSION['successfulRegistration'] = "Rejestracja przebiegła pomyślnie, możesz się teraz zalogować na swoje konto! :)";
 				}
 		}
 	}
@@ -169,7 +176,7 @@
 								<?php
 								if (isset($_SESSION['nameError']))
 								{
-									echo '</br><div class="error">'.$_SESSION['nameError'].'</div>';
+									echo '</br><div class="option error">'.$_SESSION['nameError'].'</div>';
 									unset($_SESSION['nameError']);
 								}
 							?>
@@ -187,7 +194,7 @@
 								<?php
 								if (isset($_SESSION['emailError']))
 								{
-									echo '</br><div class="error">'.$_SESSION['emailError'].'</div>';
+									echo '</br><div class="option error">'.$_SESSION['emailError'].'</div>';
 									unset($_SESSION['emailError']);
 								}
 							?>
@@ -206,7 +213,7 @@
 								<?php
 								if (isset($_SESSION['passwordError']))
 								{
-									echo '</br><div class="error">'.$_SESSION['passwordError'].'</div>';
+									echo '</br><div class="option error">'.$_SESSION['passwordError'].'</div>';
 									unset($_SESSION['passwordError']);
 								}
 							?>
@@ -220,6 +227,14 @@
 			</div>
 			<div class="col-sm-7" style="padding:0px;">	
 				<aside>
+					<?php
+								
+							if(isset($_SESSION['successfulRegistration'])) 
+							{
+								echo '<div class="option error" style="margin-bottom:10px;">'.$_SESSION['successfulRegistration'].'</div>';
+								unset($_SESSION['successfulRegistration']);
+							}
+						?>
 					<div id="sideLogo">
 						<div class="icons">
 							<i class="icon-dollar-1"></i>

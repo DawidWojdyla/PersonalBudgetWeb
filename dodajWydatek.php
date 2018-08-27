@@ -174,10 +174,10 @@ if (isset($_POST['amount']))
 					?>
 						<div id="tableContainer">
 							<form method="post">
-								<div id="tableHead">
+								<div class="tableHead">
 									Dodaj wydatek
 								</div>
-								<table id="expenseTable">
+								<table class="expenseTable">
 									<tr>
 										<td>
 											<div class="attributes">
@@ -195,7 +195,7 @@ if (isset($_POST['amount']))
 												
 													if (isset($_SESSION['amountError']))
 													{
-														echo '<div class="error">'.$_SESSION['amountError'].'</div>';
+														echo '<div class="option error">'.$_SESSION['amountError'].'</div>';
 														unset($_SESSION['amountError']);
 													}
 									?></td>
@@ -215,7 +215,7 @@ if (isset($_POST['amount']))
 												
 													if (isset($_SESSION['dateError']))
 													{
-														echo '<div class="error">'.$_SESSION['dateError'].'</div>';
+														echo '<div class="option error">'.$_SESSION['dateError'].'</div>';
 														unset($_SESSION['dateError']);
 													}
 									?></td>
@@ -239,7 +239,7 @@ if (isset($_POST['amount']))
 													}
 													if (isset($_SESSION['paymentMethodError']))
 													{
-														echo '<div class="error">'.$_SESSION['paymentMethodError'].'</div>';
+														echo '<div class="option error">'.$_SESSION['paymentMethodError'].'</div>';
 														unset($_SESSION['paymentMethodError']);
 													}
 									?></td>
@@ -263,7 +263,7 @@ if (isset($_POST['amount']))
 													}
 													if (isset($_SESSION['categoryError']))
 													{
-														echo '<div class="error">'.$_SESSION['categoryError'].'</div>';
+														echo '<div class="option error">'.$_SESSION['categoryError'].'</div>';
 														unset($_SESSION['categoryError']);
 													}
 									?></td>
@@ -289,8 +289,8 @@ if (isset($_POST['amount']))
 									</tr>
 								</table>
 								<div class="buttons">
-									<input type="submit" id="add" value="Dodaj">
-									<input id="cancel" value="Anuluj"  type="<?PHP 
+									<input type="submit" class="add" value="Dodaj">
+									<input class="cancel" value="Anuluj"  type="<?PHP 
 										if (isset($isAllOk) && !$isAllOk)
 										{
 											echo 'button" onClick="window.location.href=window.location.href"';

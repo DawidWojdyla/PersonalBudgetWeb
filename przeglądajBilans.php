@@ -188,20 +188,20 @@ $expenses = $expensesQuery->fetchAll();
 												
 													if (isset($_SESSION['dateError']))
 													{
-														echo '<div class="error text-center">'.$_SESSION['dateError']."</div>";
+														echo '<div class="option error text-center">'.$_SESSION['dateError']."</div>";
 														unset($_SESSION['dateError']);
 													}
 								  echo '</div>
 											<div class="col-sm-2 col-xs-6" style="padding-right:1;">
 												<div class="customPeriod" style="text-align:right;">													
-													<input type="submit" id="add" name="okay" value="Pokaż">  															
+													<input type="submit" class="add" name="okay" value="Pokaż">  															
 												</div>
 											</div>
 													</form>
 												<div class="col-sm-2 col-xs-6" style="padding-left:1;">
 													<form method="post">
 														<div class="customPeriod" style="text-align:left;">	
-															<input type="submit" id="cancel" name="cancel" value="Anuluj">
+															<input type="submit" class="cancel" name="cancel" value="Anuluj">
 														</div>
 													</form>
 												</div>
@@ -228,7 +228,7 @@ $expenses = $expensesQuery->fetchAll();
 						</div>
 						<div id="tableContainer">
 							<section>
-								<div id="tableHead">
+								<div class="tableHead">
 									Przychody
 								</div>
 								<table class="balanceTable"><?PHP
@@ -250,7 +250,7 @@ $expenses = $expensesQuery->fetchAll();
 								</table>
 							</section>
 							<section>
-								<div id="tableHead">
+								<div class="tableHead">
 									Wydatki
 								</div>
 								<table class="balanceTable"><?PHP
@@ -274,7 +274,7 @@ $expenses = $expensesQuery->fetchAll();
 								</table
 							</section>
 							<section>
-								<div id="tableHead">
+								<div class="tableHead">
 									Bilans
 								</div>
 								<div class="balanceTable">
